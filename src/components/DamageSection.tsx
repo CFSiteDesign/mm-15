@@ -33,14 +33,14 @@ const DamageSection = () => {
   return (
     <section className="relative bg-primary py-14 md:py-20 px-5 md:px-16 border-b-4 border-border overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="text-center mb-10 md:mb-14">
+        <div className="text-center mb-4 md:mb-6">
           <span className="pill-mono bg-[hsl(var(--cream))] text-[hsl(var(--deep-outline))]">// What's Going Down</span>
           <h2 className="font-pixel text-2xl md:text-5xl text-[hsl(var(--cream))] mt-4 [text-shadow:5px_5px_0_hsl(var(--deep-outline))]">
             THE BIG THREE
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 pt-2 md:pt-3">
           {CARDS.map((card) => (
             <div
               key={card.title}
