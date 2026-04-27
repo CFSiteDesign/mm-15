@@ -5,7 +5,7 @@ import sparkles from "@/assets/y2k/sparkles.png";
 const StorySection = () => {
   return (
     <section className="relative bg-secondary py-8 md:py-20 px-5 md:px-16 border-b-4 border-border overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-6 md:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-[1fr_auto] md:grid-cols-2 gap-3 md:gap-16 items-center">
         <div>
           <span className="pill-mono mb-3 md:mb-4">15 Years of Madness</span>
           <h2 className="font-pixel text-[hsl(var(--deep-outline))] text-xl md:text-4xl lg:text-5xl leading-tight mt-2 md:mt-3 mb-3 md:mb-5 [text-shadow:3px_3px_0_hsl(var(--cream))] md:[text-shadow:4px_4px_0_hsl(var(--cream))]">
