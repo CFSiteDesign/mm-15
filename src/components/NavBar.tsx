@@ -146,7 +146,6 @@ const NavBar = () => {
           </div>
           <a href="https://madmonkeyhostels.com/mad-loyalty" className="block font-silk uppercase text-xs py-2">Mad Loyalty</a>
           <div className="flex gap-2 pt-3 border-t-2 border-border mt-3">
-            <a href="https://madmonkeyhostels.com/login" className="flex-1 text-center font-silk uppercase text-[11px] border-2 border-border px-3 py-2.5">Login</a>
             <a href="https://madmonkeyhostels.com" className="flex-1 text-center font-silk uppercase text-[11px] border-2 border-border px-3 py-2.5 bg-primary text-primary-foreground">Book Now</a>
           </div>
         </div>
