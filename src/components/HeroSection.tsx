@@ -15,11 +15,44 @@ const HeroSection = () => {
   const [showDialog, setShowDialog] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const allInRef = useRef<HTMLButtonElement>(null);
   const rafRef = useRef<number | null>(null);
   const targetRef = useRef<{ x: number; y: number } | null>(null);
   const currentRef = useRef<{ x: number; y: number } | null>(null);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
-  const [following, setFollowing] = useState(false);
+
+  // Compute the "rest" position so the dialog lands centered above the All In button.
+  const getRestPos = () => {
+    const section = sectionRef.current;
+    const dialog = dialogRef.current;
+    const btn = allInRef.current;
+    if (!section || !dialog || !btn) return null;
+    const sRect = section.getBoundingClientRect();
+    const bRect = btn.getBoundingClientRect();
+    const w = dialog.offsetWidth;
+    const h = dialog.offsetHeight;
+    let x = bRect.left - sRect.left + bRect.width / 2 - w / 2;
+    let y = bRect.top - sRect.top - h - 12;
+    x = Math.max(8, Math.min(sRect.width - w - 8, x));
+    y = Math.max(8, Math.min(sRect.height - h - 8, y));
+    return { x, y };
+  };
+
+  // Initialize position to the rest spot once the dialog mounts.
+  useEffect(() => {
+    if (!showDialog) return;
+    const init = () => {
+      const rest = getRestPos();
+      if (rest) {
+        currentRef.current = rest;
+        targetRef.current = rest;
+        setPos(rest);
+      }
+    };
+    init();
+    window.addEventListener("resize", init);
+    return () => window.removeEventListener("resize", init);
+  }, [showDialog]);
 
   useEffect(() => {
     if (!showDialog) return;
@@ -31,24 +64,33 @@ const HeroSection = () => {
     const OFFSET_Y = 18;
 
     const animate = () => {
-      if (!targetRef.current) {
+      const target = targetRef.current;
+      if (!target) {
         rafRef.current = null;
         return;
       }
-      const cur = currentRef.current ?? targetRef.current;
+      const cur = currentRef.current ?? target;
       const next = {
-        x: cur.x + (targetRef.current.x - cur.x) * 0.18,
-        y: cur.y + (targetRef.current.y - cur.y) * 0.18,
+        x: cur.x + (target.x - cur.x) * 0.15,
+        y: cur.y + (target.y - cur.y) * 0.15,
       };
       currentRef.current = next;
       setPos(next);
-      const dx = targetRef.current.x - next.x;
-      const dy = targetRef.current.y - next.y;
+      const dx = target.x - next.x;
+      const dy = target.y - next.y;
       if (Math.abs(dx) < 0.3 && Math.abs(dy) < 0.3) {
+        currentRef.current = target;
+        setPos(target);
         rafRef.current = null;
         return;
       }
       rafRef.current = requestAnimationFrame(animate);
+    };
+
+    const ensureAnimating = () => {
+      if (rafRef.current == null) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
     };
 
     const handleMove = (e: MouseEvent) => {
@@ -59,11 +101,6 @@ const HeroSection = () => {
         e.clientY >= sectionRect.top &&
         e.clientY <= sectionRect.bottom;
 
-      if (!insideSection) {
-        setFollowing(false);
-        return;
-      }
-
       const dialogRect = dialog.getBoundingClientRect();
       const insideDialog =
         e.clientX >= dialogRect.left &&
@@ -71,11 +108,17 @@ const HeroSection = () => {
         e.clientY >= dialogRect.top &&
         e.clientY <= dialogRect.bottom;
 
-      if (insideDialog) {
-        setFollowing(false);
+      if (!insideSection || insideDialog) {
+        // Ease back to the All In button.
+        const rest = getRestPos();
+        if (rest) {
+          targetRef.current = rest;
+          ensureAnimating();
+        }
         return;
       }
 
+      // Follow the cursor.
       const w = dialog.offsetWidth;
       const h = dialog.offsetHeight;
       let x = e.clientX - sectionRect.left + OFFSET_X;
@@ -85,10 +128,7 @@ const HeroSection = () => {
 
       targetRef.current = { x, y };
       if (!currentRef.current) currentRef.current = { x, y };
-      setFollowing(true);
-      if (rafRef.current == null) {
-        rafRef.current = requestAnimationFrame(animate);
-      }
+      ensureAnimating();
     };
 
     window.addEventListener("mousemove", handleMove);
@@ -97,6 +137,7 @@ const HeroSection = () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
   }, [showDialog]);
+
 
   return (
     <section ref={sectionRef} className="relative w-full bg-denim bg-denim-vignette bg-stars-overlay overflow-hidden border-b-4 border-border">
@@ -148,14 +189,12 @@ const HeroSection = () => {
         <div
           ref={dialogRef}
           style={
-            following && pos
+            pos
               ? { left: `${pos.x}px`, top: `${pos.y}px`, bottom: "auto", right: "auto", transform: "none" }
               : undefined
           }
           className={`absolute z-30 w-[260px] md:w-[290px] win98 sticker-enter ${
-            following && pos
-              ? ""
-              : "bottom-4 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-8"
+            pos ? "" : "bottom-8 left-1/2 -translate-x-1/2"
           }`}
         >
           <div className="win98-title">
@@ -175,7 +214,7 @@ const HeroSection = () => {
               <span className="text-xs md:text-sm opacity-70">System will not respond if ignored.</span>
             </p>
             <div className="flex gap-2 justify-end">
-              <button onClick={scrollToLocations} className="win98-btn">[ All In ]</button>
+              <button ref={allInRef} onClick={scrollToLocations} className="win98-btn">[ All In ]</button>
               <button onClick={() => setShowDialog(false)} className="win98-btn">[ Ignore ]</button>
             </div>
           </div>
