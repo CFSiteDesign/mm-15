@@ -99,7 +99,7 @@ const HeroSection = () => {
   }, [showDialog]);
 
   return (
-    <section className="relative w-full bg-denim bg-denim-vignette bg-stars-overlay overflow-hidden border-b-4 border-border">
+    <section ref={sectionRef} className="relative w-full bg-denim bg-denim-vignette bg-stars-overlay overflow-hidden border-b-4 border-border">
       {/* Stickers — desktop */}
       <img src={camera} alt="" loading="lazy" className="hidden md:block absolute top-[6%] right-[5%] w-44 lg:w-52 sticker -rotate-12 z-10 pointer-events-none" />
       <img src={walkman} alt="" loading="lazy" className="hidden md:block absolute top-[10%] left-[3%] w-48 lg:w-56 sticker rotate-6 z-10 pointer-events-none" />
