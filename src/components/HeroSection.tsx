@@ -214,7 +214,7 @@ const HeroSection = () => {
               <span className="text-xs md:text-sm opacity-70">System will not respond if ignored.</span>
             </p>
             <div className="flex gap-2 justify-end">
-              <button onClick={scrollToLocations} className="win98-btn">[ All In ]</button>
+              <button ref={allInRef} onClick={scrollToLocations} className="win98-btn">[ All In ]</button>
               <button onClick={() => setShowDialog(false)} className="win98-btn">[ Ignore ]</button>
             </div>
           </div>
