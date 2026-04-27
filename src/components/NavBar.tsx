@@ -105,10 +105,6 @@ const NavBar = () => {
 
         {/* Right side */}
         <div className="hidden md:flex items-center gap-2">
-          <span className="font-silk uppercase text-[10px] text-[hsl(var(--deep-outline))]/60 px-2">USD | $</span>
-          <a href="https://madmonkeyhostels.com/login" className="font-silk uppercase text-[10px] border-2 border-border px-3 py-2 bg-[hsl(var(--cream))] text-[hsl(var(--deep-outline))] hover:bg-secondary transition-colors">
-            Login
-          </a>
           <a href="https://madmonkeyhostels.com" className="font-silk uppercase text-[10px] border-2 border-border px-3 py-2 bg-primary text-primary-foreground shadow-[3px_3px_0_hsl(var(--mm-blue))] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_hsl(var(--mm-blue))] transition-all">
             Book Now
           </a>
@@ -150,7 +146,6 @@ const NavBar = () => {
           </div>
           <a href="https://madmonkeyhostels.com/mad-loyalty" className="block font-silk uppercase text-xs py-2">Mad Loyalty</a>
           <div className="flex gap-2 pt-3 border-t-2 border-border mt-3">
-            <a href="https://madmonkeyhostels.com/login" className="flex-1 text-center font-silk uppercase text-[11px] border-2 border-border px-3 py-2.5">Login</a>
             <a href="https://madmonkeyhostels.com" className="flex-1 text-center font-silk uppercase text-[11px] border-2 border-border px-3 py-2.5 bg-primary text-primary-foreground">Book Now</a>
           </div>
         </div>
