@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import titleLockup from "@/assets/y2k/title.png";
 import camera from "@/assets/y2k/camera.png";
 import walkman from "@/assets/y2k/walkman.png";
@@ -13,9 +13,93 @@ const scrollToLocations = () => {
 
 const HeroSection = () => {
   const [showDialog, setShowDialog] = useState(true);
+  const sectionRef = useRef<HTMLElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const targetRef = useRef<{ x: number; y: number } | null>(null);
+  const currentRef = useRef<{ x: number; y: number } | null>(null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const [following, setFollowing] = useState(false);
+
+  useEffect(() => {
+    if (!showDialog) return;
+    const section = sectionRef.current;
+    const dialog = dialogRef.current;
+    if (!section || !dialog) return;
+
+    const OFFSET_X = 18;
+    const OFFSET_Y = 18;
+
+    const animate = () => {
+      if (!targetRef.current) {
+        rafRef.current = null;
+        return;
+      }
+      const cur = currentRef.current ?? targetRef.current;
+      const next = {
+        x: cur.x + (targetRef.current.x - cur.x) * 0.18,
+        y: cur.y + (targetRef.current.y - cur.y) * 0.18,
+      };
+      currentRef.current = next;
+      setPos(next);
+      const dx = targetRef.current.x - next.x;
+      const dy = targetRef.current.y - next.y;
+      if (Math.abs(dx) < 0.3 && Math.abs(dy) < 0.3) {
+        rafRef.current = null;
+        return;
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    const handleMove = (e: MouseEvent) => {
+      const sectionRect = section.getBoundingClientRect();
+      const insideSection =
+        e.clientX >= sectionRect.left &&
+        e.clientX <= sectionRect.right &&
+        e.clientY >= sectionRect.top &&
+        e.clientY <= sectionRect.bottom;
+
+      if (!insideSection) {
+        setFollowing(false);
+        return;
+      }
+
+      const dialogRect = dialog.getBoundingClientRect();
+      const insideDialog =
+        e.clientX >= dialogRect.left &&
+        e.clientX <= dialogRect.right &&
+        e.clientY >= dialogRect.top &&
+        e.clientY <= dialogRect.bottom;
+
+      if (insideDialog) {
+        setFollowing(false);
+        return;
+      }
+
+      const w = dialog.offsetWidth;
+      const h = dialog.offsetHeight;
+      let x = e.clientX - sectionRect.left + OFFSET_X;
+      let y = e.clientY - sectionRect.top + OFFSET_Y;
+      x = Math.max(8, Math.min(sectionRect.width - w - 8, x));
+      y = Math.max(8, Math.min(sectionRect.height - h - 8, y));
+
+      targetRef.current = { x, y };
+      if (!currentRef.current) currentRef.current = { x, y };
+      setFollowing(true);
+      if (rafRef.current == null) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [showDialog]);
 
   return (
-    <section className="relative w-full bg-denim bg-denim-vignette bg-stars-overlay overflow-hidden border-b-4 border-border">
+    <section ref={sectionRef} className="relative w-full bg-denim bg-denim-vignette bg-stars-overlay overflow-hidden border-b-4 border-border">
       {/* Stickers — desktop */}
       <img src={camera} alt="" loading="lazy" className="hidden md:block absolute top-[6%] right-[5%] w-44 lg:w-52 sticker -rotate-12 z-10 pointer-events-none" />
       <img src={walkman} alt="" loading="lazy" className="hidden md:block absolute top-[10%] left-[3%] w-48 lg:w-56 sticker rotate-6 z-10 pointer-events-none" />
@@ -61,7 +145,19 @@ const HeroSection = () => {
 
       {/* Win98 dialog — bottom-left, out of the way of stickers */}
       {showDialog && (
-        <div className="absolute z-30 bottom-4 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-8 w-[260px] md:w-[290px] win98 sticker-enter">
+        <div
+          ref={dialogRef}
+          style={
+            following && pos
+              ? { left: `${pos.x}px`, top: `${pos.y}px`, bottom: "auto", right: "auto", transform: "none" }
+              : undefined
+          }
+          className={`absolute z-30 w-[260px] md:w-[290px] win98 sticker-enter ${
+            following && pos
+              ? ""
+              : "bottom-4 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-8"
+          }`}
+        >
           <div className="win98-title">
             <span>⚠ WARNING.EXE</span>
             <button
