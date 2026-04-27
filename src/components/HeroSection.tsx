@@ -132,15 +132,7 @@ const HeroSection = () => {
       {/* Win98 dialog — bottom-left, out of the way of stickers */}
       {showDialog && (
         <div
-          ref={dialogRef}
-          style={
-            pos
-              ? { left: `${pos.x}px`, top: `${pos.y}px`, bottom: "auto", right: "auto", transform: "none" }
-              : undefined
-          }
-          className={`absolute z-30 w-[260px] md:w-[290px] win98 sticker-enter ${
-            pos ? "" : "bottom-8 left-1/2 -translate-x-1/2"
-          }`}
+          className="absolute z-30 w-[260px] md:w-[290px] win98 sticker-enter bottom-8 left-1/2 -translate-x-1/2"
         >
           <div className="win98-title">
             <span>⚠ WARNING.EXE</span>
@@ -159,7 +151,14 @@ const HeroSection = () => {
               <span className="text-xs md:text-sm opacity-70">System will not respond if ignored.</span>
             </p>
             <div className="flex gap-2 justify-end">
-              <button ref={allInRef} onClick={scrollToLocations} className="win98-btn">[ All In ]</button>
+              <button
+                ref={allInRef}
+                onClick={scrollToLocations}
+                className="win98-btn"
+                style={{ transform: `translate(${offset.x}px, ${offset.y}px)`, willChange: "transform" }}
+              >
+                [ All In ]
+              </button>
               <button onClick={() => setShowDialog(false)} className="win98-btn">[ Ignore ]</button>
             </div>
           </div>
