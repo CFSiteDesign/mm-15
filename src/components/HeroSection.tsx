@@ -189,14 +189,12 @@ const HeroSection = () => {
         <div
           ref={dialogRef}
           style={
-            following && pos
+            pos
               ? { left: `${pos.x}px`, top: `${pos.y}px`, bottom: "auto", right: "auto", transform: "none" }
               : undefined
           }
           className={`absolute z-30 w-[260px] md:w-[290px] win98 sticker-enter ${
-            following && pos
-              ? ""
-              : "bottom-4 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 md:bottom-8"
+            pos ? "" : "bottom-8 left-1/2 -translate-x-1/2"
           }`}
         >
           <div className="win98-title">
