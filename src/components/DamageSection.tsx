@@ -13,11 +13,11 @@ const CARDS = [
   },
   {
     title: "Free Flow",
-    description: "Open bar. Need we say more.",
+    description: "Open bar. 3 hours. Need we say more.",
     badge: "All In",
     sticker: glassesOrange,
     rotate: "rotate-[10deg]",
-    bg: "bg-secondary",
+    bg: "bg-card",
   },
   {
     title: "Live DJs",
