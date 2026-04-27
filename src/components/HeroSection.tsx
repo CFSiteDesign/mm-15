@@ -14,34 +14,65 @@ const scrollToLocations = () => {
 const HeroSection = () => {
   const [showDialog, setShowDialog] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const allInRef = useRef<HTMLButtonElement>(null);
   const rafRef = useRef<number | null>(null);
-  const targetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const currentRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const restRef = useRef<{ x: number; y: number } | null>(null);
+  const targetRef = useRef<{ x: number; y: number } | null>(null);
+  const currentRef = useRef<{ x: number; y: number } | null>(null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
 
-  // Magnetic All In button — attracted to the cursor when nearby.
+  const computeRest = () => {
+    const section = sectionRef.current;
+    const dialog = dialogRef.current;
+    if (!section || !dialog) return null;
+    const sRect = section.getBoundingClientRect();
+    const w = dialog.offsetWidth;
+    const h = dialog.offsetHeight;
+    const x = sRect.width / 2 - w / 2;
+    const y = sRect.height - h - 32;
+    return { x: Math.max(8, x), y: Math.max(8, y) };
+  };
+
   useEffect(() => {
     if (!showDialog) return;
-    const btn = allInRef.current;
-    if (!btn) return;
+    const init = () => {
+      const rest = computeRest();
+      if (rest) {
+        restRef.current = rest;
+        if (!currentRef.current) currentRef.current = rest;
+        if (!targetRef.current) targetRef.current = rest;
+        setPos(currentRef.current);
+      }
+    };
+    init();
+    window.addEventListener("resize", init);
+    return () => window.removeEventListener("resize", init);
+  }, [showDialog]);
 
-    const RADIUS = 220; // px — activation distance
-    const STRENGTH = 0.45; // 0..1 — how strongly it pulls toward cursor
-    const MAX = 60; // px — max displacement
+  useEffect(() => {
+    if (!showDialog) return;
+    const section = sectionRef.current;
+    const dialog = dialogRef.current;
+    const btn = allInRef.current;
+    if (!section || !dialog || !btn) return;
 
     const animate = () => {
       const target = targetRef.current;
       const cur = currentRef.current;
+      if (!target || !cur) {
+        rafRef.current = null;
+        return;
+      }
       const next = {
-        x: cur.x + (target.x - cur.x) * 0.18,
-        y: cur.y + (target.y - cur.y) * 0.18,
+        x: cur.x + (target.x - cur.x) * 0.12,
+        y: cur.y + (target.y - cur.y) * 0.12,
       };
       currentRef.current = next;
-      setOffset(next);
-      if (Math.abs(target.x - next.x) < 0.2 && Math.abs(target.y - next.y) < 0.2) {
+      setPos(next);
+      if (Math.abs(target.x - next.x) < 0.3 && Math.abs(target.y - next.y) < 0.3) {
         currentRef.current = target;
-        setOffset(target);
+        setPos(target);
         rafRef.current = null;
         return;
       }
@@ -53,26 +84,36 @@ const HeroSection = () => {
     };
 
     const handleMove = (e: MouseEvent) => {
-      const b = allInRef.current;
-      if (!b) return;
-      // Use the button's natural center (subtract current offset to get rest center).
-      const rect = b.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2 - currentRef.current.x;
-      const cy = rect.top + rect.height / 2 - currentRef.current.y;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const dist = Math.hypot(dx, dy);
+      const sRect = section.getBoundingClientRect();
+      const insideSection =
+        e.clientX >= sRect.left &&
+        e.clientX <= sRect.right &&
+        e.clientY >= sRect.top &&
+        e.clientY <= sRect.bottom;
 
-      if (dist < RADIUS) {
-        const falloff = 1 - dist / RADIUS;
-        let tx = dx * STRENGTH * falloff;
-        let ty = dy * STRENGTH * falloff;
-        tx = Math.max(-MAX, Math.min(MAX, tx));
-        ty = Math.max(-MAX, Math.min(MAX, ty));
-        targetRef.current = { x: tx, y: ty };
-      } else {
-        targetRef.current = { x: 0, y: 0 };
+      if (!insideSection) {
+        const rest = restRef.current ?? computeRest();
+        if (rest) {
+          targetRef.current = rest;
+          ensureAnimating();
+        }
+        return;
       }
+
+      const dRect = dialog.getBoundingClientRect();
+      const bRect = btn.getBoundingClientRect();
+      const btnOffsetX = bRect.left - dRect.left + bRect.width / 2;
+      const btnOffsetY = bRect.top - dRect.top + bRect.height / 2;
+
+      const w = dialog.offsetWidth;
+      const h = dialog.offsetHeight;
+      let x = e.clientX - sRect.left - btnOffsetX;
+      let y = e.clientY - sRect.top - btnOffsetY;
+      x = Math.max(8, Math.min(sRect.width - w - 8, x));
+      y = Math.max(8, Math.min(sRect.height - h - 8, y));
+
+      targetRef.current = { x, y };
+      if (!currentRef.current) currentRef.current = { x, y };
       ensureAnimating();
     };
 
