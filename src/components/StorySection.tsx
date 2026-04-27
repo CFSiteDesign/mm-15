@@ -5,7 +5,7 @@ import sparkles from "@/assets/y2k/sparkles.png";
 const StorySection = () => {
   return (
     <section className="relative bg-secondary py-8 md:py-20 px-5 md:px-16 border-b-4 border-border overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-6 md:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-[1fr_auto] md:grid-cols-2 gap-3 md:gap-16 items-center">
         <div>
           <span className="pill-mono mb-3 md:mb-4">15 Years of Madness</span>
           <h2 className="font-pixel text-[hsl(var(--deep-outline))] text-xl md:text-4xl lg:text-5xl leading-tight mt-2 md:mt-3 mb-3 md:mb-5 [text-shadow:3px_3px_0_hsl(var(--cream))] md:[text-shadow:4px_4px_0_hsl(var(--cream))]">
@@ -26,12 +26,12 @@ const StorySection = () => {
           </div>
         </div>
 
-        {/* Decorative images — compact strip on mobile, original layout on desktop */}
-        <div className="relative h-[110px] md:h-[400px] mt-2 md:mt-0">
-          <img src={cds} alt="" loading="lazy" className="absolute top-0 left-2 md:left-1/4 w-24 md:w-64 sticker rotate-[-8deg]" />
-          <img src={glasses} alt="" loading="lazy" className="absolute bottom-0 right-2 md:right-0 w-24 md:w-56 sticker rotate-[12deg]" />
-          <img src={sparkles} alt="" loading="lazy" className="absolute top-2 right-1/3 md:top-8 md:right-10 w-5 md:w-14" />
-          <img src={sparkles} alt="" loading="lazy" className="absolute bottom-3 left-1/3 md:bottom-12 md:left-2 w-4 md:w-10" />
+        {/* Decorative images — vertical stack on mobile (right column), original layout on desktop */}
+        <div className="relative w-[90px] h-[200px] md:w-auto md:h-[400px]">
+          <img src={cds} alt="" loading="lazy" className="absolute top-0 right-0 md:left-1/4 md:right-auto w-20 md:w-64 sticker rotate-[-8deg]" />
+          <img src={glasses} alt="" loading="lazy" className="absolute bottom-0 right-0 w-20 md:w-56 sticker rotate-[12deg]" />
+          <img src={sparkles} alt="" loading="lazy" className="absolute top-1 left-0 md:top-8 md:right-10 md:left-auto w-4 md:w-14" />
+          <img src={sparkles} alt="" loading="lazy" className="absolute bottom-2 left-1 md:bottom-12 md:left-2 w-3 md:w-10" />
         </div>
       </div>
     </section>
