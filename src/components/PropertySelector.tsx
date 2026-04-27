@@ -24,7 +24,7 @@ const PropertySelector = () => {
           <h2 className="font-pixel text-2xl md:text-5xl text-secondary mt-4 [text-shadow:5px_5px_0_hsl(var(--deep-outline))] leading-tight">
             ONE NIGHT.<br/>EVERY HOSTEL.
           </h2>
-          <p className="text-[hsl(var(--cream))] font-bold mt-3 text-sm md:text-base">
+          <p className="text-[hsl(var(--cream))] font-bold mt-3 text-base md:text-lg [text-shadow:2px_2px_0_hsl(var(--deep-outline))]">
             Find your closest Mad Monkey and lock it in.
           </p>
         </div>
