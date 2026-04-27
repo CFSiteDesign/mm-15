@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import titleLockup from "@/assets/y2k/title.png";
 import camera from "@/assets/y2k/camera.png";
 import walkman from "@/assets/y2k/walkman.png";
