@@ -38,6 +38,9 @@ const DamageSection = () => {
           <h2 className="font-pixel text-2xl md:text-5xl text-[hsl(var(--cream))] mt-4 [text-shadow:5px_5px_0_hsl(var(--deep-outline))]">
             THE BIG THREE
           </h2>
+          <p className="font-mono-pixel text-sm md:text-base text-[hsl(var(--cream))] mt-3 max-w-xl mx-auto [text-shadow:1px_1px_0_hsl(var(--deep-outline))]">
+            Every location is unique — check your specific hostel's itinerary before booking.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 pt-2 md:pt-3">
