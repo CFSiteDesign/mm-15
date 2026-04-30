@@ -42,6 +42,7 @@ const StorySection = () => {
           <img src={sparkles} alt="" loading="lazy" className="absolute -top-2 right-2 md:-top-4 md:right-6 w-4 md:w-10" />
           <img src={sparkles} alt="" loading="lazy" className="absolute bottom-4 -left-2 md:bottom-10 md:-left-4 w-3 md:w-8" />
         </div>
+        <div className="hidden md:block" aria-hidden="true" />
       </div>
     </section>
   );
