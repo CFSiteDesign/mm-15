@@ -1,6 +1,7 @@
 import cds from "@/assets/y2k/cds.png";
 import glasses from "@/assets/y2k/glasses.png";
 import sparkles from "@/assets/y2k/sparkles.png";
+import partyCrowd from "@/assets/y2k/party-crowd.png";
 
 const StorySection = () => {
   return (
@@ -26,12 +27,20 @@ const StorySection = () => {
           </div>
         </div>
 
-        {/* Decorative images — vertical stack on mobile (right column), original layout on desktop */}
-        <div className="relative w-[90px] h-[200px] md:w-auto md:h-[400px]">
-          <img src={cds} alt="" loading="lazy" className="absolute top-0 right-0 md:left-1/4 md:right-auto w-20 md:w-64 sticker rotate-[-8deg]" />
-          <img src={glasses} alt="" loading="lazy" className="absolute bottom-0 right-0 w-20 md:w-56 sticker rotate-[12deg]" />
-          <img src={sparkles} alt="" loading="lazy" className="absolute top-1 left-0 md:top-8 md:right-10 md:left-auto w-4 md:w-14" />
-          <img src={sparkles} alt="" loading="lazy" className="absolute bottom-2 left-1 md:bottom-12 md:left-2 w-3 md:w-10" />
+        {/* Party photo with sticker corners */}
+        <div className="relative w-[140px] h-[200px] md:w-auto md:h-[460px] md:aspect-[3/4]">
+          <div className="card-pixel bg-card p-1.5 md:p-2 w-full h-full rotate-[-2deg]">
+            <img
+              src={partyCrowd}
+              alt="Mad Monkey 15th birthday crowd going wild"
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <img src={cds} alt="" loading="lazy" className="absolute -top-4 -left-4 md:-top-8 md:-left-10 w-14 md:w-32 sticker rotate-[-12deg] pointer-events-none" />
+          <img src={glasses} alt="" loading="lazy" className="absolute -bottom-3 -right-3 md:-bottom-8 md:-right-10 w-14 md:w-32 sticker rotate-[14deg] pointer-events-none" />
+          <img src={sparkles} alt="" loading="lazy" className="absolute -top-2 right-2 md:-top-4 md:right-6 w-4 md:w-10" />
+          <img src={sparkles} alt="" loading="lazy" className="absolute bottom-4 -left-2 md:bottom-10 md:-left-4 w-3 md:w-8" />
         </div>
       </div>
     </section>
