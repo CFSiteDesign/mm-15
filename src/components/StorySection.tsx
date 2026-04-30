@@ -1,6 +1,7 @@
 import cds from "@/assets/y2k/cds.png";
 import glasses from "@/assets/y2k/glasses.png";
 import sparkles from "@/assets/y2k/sparkles.png";
+import partyCrowd from "@/assets/y2k/party-crowd.png";
 
 const StorySection = () => {
   return (
